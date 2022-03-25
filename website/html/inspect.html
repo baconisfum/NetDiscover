@@ -1,0 +1,177 @@
+<!--
+Name: Gavin Claire
+Document: inspect.html
+Decription: HTML for the inspect page.
+-->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Network Visulation Scripts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+    <section class="inspect">
+
+        <div class="text">
+            <h1> Inspect Network </h1>
+        </div>
+
+        <div class="container">
+            <div id="singleNetwork"></div>
+        </div>
+
+        <div class="rightContainer">
+            <div class="alignRight">
+                <a class="inspectNewButton" href="{% url 'upload' %}">Inspect New Network</a>
+            </div>
+            <div class="divider"></div>
+            <div class="alignRight">
+                <a class="editButton" href="{% url 'edit' %}">Edit Network</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="scanMenu">
+                <form id="table" name="form1" action="#"> 
+                    <div class="divScroll">
+                        <table class="datatable" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Hostname</th>
+                                    <th>Models</th>
+                                    <th>Neighbors</th>
+                                    <th>Device Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="row1">
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+
+<script type="text/javascript">
+    var nodes = JSON.parse("{{nodes|escapejs}}")
+    var edges = JSON.parse("{{edges|escapejs}}")
+    var nodeData = JSON.parse("{{nodeData|escapejs}}")
+
+    // create a network
+
+    /// where images are stored
+    var DIR = "./website/static/images/";
+
+    var container = document.getElementById("singleNetwork");
+    var data = {
+        nodes: nodes,
+        edges: edges,
+    };
+    var options = {
+        configure : {
+        "enabled": false, 
+        "filter": true}, 
+        "edges": {"color": {"inherit": true}, 
+        "smooth": {"enabled": false, "type": "continuous"}}, 
+        "interaction": {"hover": true, "dragNodes": true, "hideEdgesOnDrag": false, "hideNodesOnDrag": false, "navigationButtons": true}, 
+        "physics": {"enabled": true, "stabilization": {"enabled": true, "fit": true, "iterations": 1000, "onlyDynamicEdges": false, "updateInterval": 50}
+        },
+        nodes: {
+            shape: "circularImage",
+            image: DIR + "NetDiscover_Icon_Desktop_V1.png",
+            size: 20,
+            font: {
+                size: 15,
+                color: "#000000",
+            },
+            borderWidth: 2,
+        },
+        edges: {
+            width: 2,
+        },
+        groups: {
+            Desktop: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Desktop_V1.png",
+            },
+            Firewall: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_FireWall_V1.png",
+            },
+            IPPhone: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_IPPhone_V1.png",
+            },
+            Laptop: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Laptop_V1.png",
+            },
+            Modem: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Modem_V1.png",
+            },
+            Printer: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Printer_V1.png",
+            },
+            Router: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Router_V1.png",
+            },
+            Server: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Servers_V1.png",
+            },
+            Switch: {
+                color: { background: "black", border: "black" },
+                shape: "circularImage",
+                image: DIR + "NetDiscover_Icon_Switch_V1.png",
+            },
+        },
+    };
+    var network = new vis.Network(container, data, options);
+
+    // Create table
+
+    var table = document.getElementById("datatable");
+    for (device in nodeData) {
+        var tableLen = (table.rows.length) - 1;
+
+        var hostname = nodeData[device].hostname;
+        if (typeof hostname !== "string") {
+            hostname = "Unknown";   
+        }
+        
+        var model = nodeData[device].model.toString();
+        if (model == "None") {
+            model = "Unknown";
+        }
+        var row = table.insertRow(tableLen).outerHTML = "<tr id='row"+tableLen+"'><td id='ipaddress'>"+nodeData[device].IP+"</td><td id='hostname'>"+hostname+"</td><td id='models'>"+model+"</td><td id='neighbors'>"+nodeData[device].neighbors+"</td><td id='devicetype'>"+nodeData[device].device_type+"</td></tr>";
+    }
+    
+
+</script>
+</html>
