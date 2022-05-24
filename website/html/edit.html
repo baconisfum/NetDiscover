@@ -11,6 +11,9 @@ Decription: HTML for the edit page.
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <title>Edit | NetDiscover</title>
+    <link rel="icon" href="{% static '/images/favicon.ico' %}">
 </head>
 
 <body>
@@ -173,6 +176,8 @@ Decription: HTML for the edit page.
             data: {
                 dic : outputDic,
             },
+	    headers: { "X-CSRFToken": '{{csrf_token}}' 
+	    },
             success: function(data){
                 window.location.href="{% url 'inspect' %}"; 
             },

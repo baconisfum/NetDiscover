@@ -11,6 +11,9 @@ Decription: HTML for the home page.
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	
+    <link rel="icon" href="{% static '/images/favicon.ico' %}">
+    <title>Home | NetDiscover</title>
 </head>
 <body>
 
@@ -22,6 +25,8 @@ Decription: HTML for the home page.
             <div class="logo">
                 <img src="{% static 'images/logo.png' %}" alt="NetDiscover Logo">
             </div>
+
+            
 
             <div id="main">
 
@@ -45,7 +50,7 @@ Decription: HTML for the home page.
                     <p> Please fill out this form with your local network's information: </p>
                 </div>
                 <form id="table" name="form"> 
-                    <table class="datatable" id="datatable">
+                    <table class="datatableScan" id="datatableScan">
                         <thead>
                             <tr>
                                 <th>IP Subnet</th>
@@ -65,17 +70,29 @@ Decription: HTML for the home page.
                                 <td><input type="text" id="newIPsubnet" class="form-input" placeholder="xxx.xxx.xxx.xxx/xx" maxlength=18/></td>
                                 <td><input type="text" id="newUsername" placeholder="steve"></td>
                                 <td><input type="text" id="newPassword" placeholder="password123"></td>
-                                <td><input type="button" class="addButton" onclick="addRow();" value="Add Credential"></td>
+                                <td><input type="button" class="addCredButton" onclick="addRow(); " value="Add Credential"></td>
                             </tr>
+
                         </tbody>
                     </table>
 
                     <div class="alignRight">
-                        <input type="submit" value="submit" class="submitButton" id="submit"/>
+                        <input type="submit" value="submit" class="submitButton" id="submit" onclick="hide('scanMenu'); show('scanVisual')"/>
                     </div>
                 </form>
             </div>
+
+            <div id="scanVisual">
+                <div class="text">
+                    <h1> Scanning </h1>
+                </div>
+                <div class="loading">
+                    <img src="{% static 'images/NetDiscover_Icon_Loading_DarkMode.gif' %}" alt="Scanning Logo">
+                </div>
+            </div>
+
         </div>
+
     </section>
 
 
@@ -85,20 +102,22 @@ Decription: HTML for the home page.
 
         // Delete row
         function deleteRow(num) {
+            console.log(num.toString())
             delete networkData[num.toString()];
-            document.getElementById("row" + num.toString() + "").outerHTML="";
+            document.getElementById("row" + num.toString()).outerHTML="";
         }
 
         // Add row
         function addRow() {
+
             var newIPsubnet = document.getElementById("newIPsubnet").value;
             var newUsername = document.getElementById("newUsername").value;
             var newPassword = document.getElementById("newPassword").value;
 
             if (newIPsubnet != null && validateIP(newIPsubnet) && newUsername.indexOf(' ') == -1 && newPassword.indexOf(' ') == -1) {
-                var table = document.getElementById("datatable");
+                var table = document.getElementById("datatableScan");
                 var tableLen = (table.rows.length) - 1;
-                var row = table.insertRow(tableLen).outerHTML = "<tr id=row"+newIPsubnet+"><td id='ipsubnet'>"+newIPsubnet+"</td><td id='username'>"+newUsername+"</td><td id='password'>"+newPassword+"</td><td><input type='button' class='deleteButton' onclick='deleteRow("+newIPsubnet+");' value='Delete'></td></tr>";
+                var row = table.insertRow(tableLen).outerHTML = "<tr id='row"+newIPsubnet+"'><td id='"+"ipsubnet"+"'>"+newIPsubnet+"</td><td id='"+"username"+"'>"+newUsername+"</td><td id='"+"password"+"'>"+newPassword+"</td><td><input type='"+"button"+"' class='"+"deleteCredButton"+"' onclick='"+"deleteRow("+'"'+newIPsubnet+'"'+");"+"' value='"+"Delete"+"'></td></tr>";
                 
                 document.getElementById("newIPsubnet").value="";
                 document.getElementById("newUsername").value="";
@@ -121,7 +140,9 @@ Decription: HTML for the home page.
         // Hide and show elements
 
         // On page start hide elements
+        //hide('menu');
         hide('scanMenu');
+        hide('scanVisual');
 
         // Start local network scan
         scanButton = body.querySelector(".scanbutton");

@@ -19,16 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-w7pq^pw8mk2lp=j5_f3e#p0)*4^c#4+c%9+*^4rw2-vo+swss1'
+SECRET_KEY = 'REDACTED'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'website' / 'static'
-]
+#STATICFILES_DIRS = [
+#    BASE_DIR / 'website' / 'static'
+#]
 
 # Application definition
 
@@ -42,11 +42,14 @@ INSTALLED_APPS = [
     'website'
 ]
 
+STATIC_ROOT = "/etc/staticNetDiscover/"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',       # DO NOT DO
+    'django.middleware.csrf.CsrfViewMiddleware',       # DO NOT DO
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

@@ -14,6 +14,8 @@ Decription: HTML for the inspect page.
     <!-- Network Visulation Scripts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+    <link rel="icon" href="{% static '/images/favicon.ico' %}">
+    <title>Inspect | NetDiscover</title>
 
 </head>
 
@@ -22,6 +24,9 @@ Decription: HTML for the inspect page.
     {% include 'navbar.html' %}
 
     <section class="inspect">
+        <!-- <div class="popup" onclick="myFunction()">Click me!
+            <span class="popuptext" id="myPopup">Popup text...</span>
+          </div> -->
 
         <div class="text">
             <h1> Inspect Network </h1>
@@ -29,7 +34,24 @@ Decription: HTML for the inspect page.
 
         <div class="container">
             <div id="singleNetwork"></div>
+                <table class="datatable2" id="datatable2">
+                    <thead>
+                        <tr>
+                            <th><div id="selectedIcon"> <img src="{% static 'images/NetDiscover_Icon_Laptop_V1.png' %}"> </div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="ipAddressRow"><td>IP Address: </td></tr>
+                        <tr id="hostnameRow"><td>Hostname: </td></tr>
+                        <tr id="modelsRow"><td>Models: </td></tr>
+                        <tr id="neighborsRow"><td>Neighbors: </td></tr>
+                        <tr id="deviceTypeRow"><td>Device Type: </td></tr>
+                        </tr>
+                    </tbody>
+                </table>
         </div>
+        
+        <br><hr><br> 
 
         <div class="rightContainer">
             <div class="alignRight">
@@ -39,12 +61,16 @@ Decription: HTML for the inspect page.
             <div class="alignRight">
                 <a class="editButton" href="{% url 'edit' %}">Edit Network</a>
             </div>
+            <div class="divider"></div>
+            <div class="alignRight">
+                <a class="exportButton" onclick="downloadPDF();">Export Table (PDF)</a>
+            </div>
         </div>
-
+        
         <div class="container">
             <div id="scanMenu">
                 <form id="table" name="form1" action="#"> 
-                    <div class="divScroll">
+                    <div id="tableExport" class="divScroll">
                         <table class="datatable" id="datatable">
                             <thead>
                                 <tr>
@@ -153,13 +179,74 @@ Decription: HTML for the inspect page.
         },
     };
     var network = new vis.Network(container, data, options);
+    network.on( 'click', function(properties) {
+        
+        console.log('clicked node ' + properties.nodes);
+        
+        if (properties.nodes != "") {
+            var selectedDevice = null;
+            for(device in nodeData) {
+                if (nodeData[device].IP == properties.nodes || nodeData[device].hostname == properties.nodes) {
+                    selectedDevice = device;
+                }
+            }
+
+            var hostname = nodeData[selectedDevice].hostname;
+            if (typeof hostname !== "string") {
+                hostname = "Unknown";   
+            }
+            
+            var model = nodeData[selectedDevice].model.toString();
+            if (model == "None") {
+                model = "Unknown";
+            }
+
+            var neighbors = nodeData[selectedDevice].neighbors.toString().replace(/,/gi, ", ");
+
+            document.getElementById("selectedIcon").innerHTML = "<img src='website/static/images/NetDiscover_Icon_" + nodeData[selectedDevice].device_type + "_V1.png" + "'>";
+            document.getElementById("ipAddressRow").innerHTML = "<td>IP Address: " + nodeData[selectedDevice].IP +  "</td>";
+            document.getElementById("hostnameRow").innerHTML = "<td>Hostname: " + hostname +  "</td>";
+            document.getElementById("modelsRow").innerHTML = "<td>Models: " + model +  "</td>";
+            document.getElementById("neighborsRow").innerHTML = "<td>Neighbors: " + neighbors +  "</td>";
+            document.getElementById("deviceTypeRow").innerHTML = "<td>Device Type: " + nodeData[selectedDevice].device_type +  "</td>";
+        }
+    });
+
+    // Create pdf of page
+    function downloadPDF() {
+        var sTable = document.getElementById('tableExport').innerHTML;
+
+        // Create temp html document with table contents and print
+        var style = "<style>";
+        style = style + "table { width: 100%; font: 17px sans-serif;}";
+        style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+        style = style + "padding: 2px 3px; text-align: center; }";
+        style = style + "</style>";
+
+        var win = window.open('', '', 'height=700,width=700');
+
+        win.document.write('<html><head>');
+        win.document.write('<title>Network Topology Inspect Table</title>');
+        win.document.write(style);
+        win.document.write('</head>');
+        win.document.write('<body>');
+        win.document.write(sTable);
+        win.document.write('</body></html>');
+
+        win.document.close();
+        win.print();
+    }
 
     // Create table
 
     var table = document.getElementById("datatable");
+    selectedDevice = null
     for (device in nodeData) {
         var tableLen = (table.rows.length) - 1;
 
+        if (selectedDevice == null) {
+            selectedDevice = device
+        }
         var hostname = nodeData[device].hostname;
         if (typeof hostname !== "string") {
             hostname = "Unknown";   
@@ -169,9 +256,28 @@ Decription: HTML for the inspect page.
         if (model == "None") {
             model = "Unknown";
         }
-        var row = table.insertRow(tableLen).outerHTML = "<tr id='row"+tableLen+"'><td id='ipaddress'>"+nodeData[device].IP+"</td><td id='hostname'>"+hostname+"</td><td id='models'>"+model+"</td><td id='neighbors'>"+nodeData[device].neighbors+"</td><td id='devicetype'>"+nodeData[device].device_type+"</td></tr>";
+        var neighbors = nodeData[device].neighbors.toString().replace(/,/gi, ", ");
+        var row = table.insertRow(tableLen).outerHTML = "<tr id='row"+tableLen+"'><td id='ipaddress'>"+nodeData[device].IP+"</td><td id='hostname'>"+hostname+"</td><td id='models'>"+model+"</td><td id='neighbors'>"+neighbors+"</td><td id='devicetype'>"+nodeData[device].device_type+"</td></tr>";
     }
     
+    var hostname = nodeData[device].hostname;
+    if (typeof hostname !== "string") {
+        hostname = "Unknown";   
+    }
+    
+    var model = nodeData[device].model.toString();
+    if (model == "None") {
+        model = "Unknown";
+    }
 
+    var neighbors = nodeData[device].neighbors.toString().replace(/,/gi, ", ");
+
+    document.getElementById("selectedIcon").innerHTML = "<img src='website/static/images/NetDiscover_Icon_" + nodeData[device].device_type + "_V1.png" + "'>";
+    document.getElementById("ipAddressRow").innerHTML = "<td>IP Address: " + nodeData[device].IP +  "</td>";
+    document.getElementById("hostnameRow").innerHTML = "<td>Hostname: " + hostname +  "</td>";
+    document.getElementById("modelsRow").innerHTML = "<td>Models: " + model +  "</td>";
+    document.getElementById("neighborsRow").innerHTML = "<td>Neighbors: " + neighbors +  "</td>";
+    document.getElementById("deviceTypeRow").innerHTML = "<td>Device Type: " + nodeData[device].device_type +  "</td>";
+    
 </script>
 </html>

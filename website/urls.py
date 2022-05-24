@@ -20,4 +20,5 @@ urlpatterns = [
     path('help', views.help, name="help"),
     path('passDictionary', views.passDictionary, name ="passDictionary"),
     path('passNetworkInformation', views.passNetworkInformation, name ="passNetworkInformation"),
+    #path("favicon.ico",RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
 ]
