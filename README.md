@@ -11,6 +11,8 @@
 NetDiscover is viewable and usable live here! 
 [NetDiscover Live](https://team14netdiscover.ronalddu.me/)
 
+<img src="[https://raw.githubusercontent.com/duronald/NetDiscover/main/staticNetDiscover/images/favicon.ico](https://raw.githubusercontent.com/duronald/NetDiscover/main/inspectScreenshot.png)" alt="drawing" width="500"/>
+
 ## Creators
 
 Team 14 [Internet Explorers]: Gavin Claire, Ronald Du, Carlos Dye, and Chad Saltzman 
