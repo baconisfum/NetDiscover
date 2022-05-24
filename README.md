@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/duronald/NetDiscover/main/staticNetDiscover/images/favicon.ico" alt="drawing" width="200"/>
+<img src="https://raw.githubusercontent.com/duronald/NetDiscover/main/staticNetDiscover/images/favicon.ico" alt="MetDiscover Logo" width="200"/>
 
 
 # NetDiscover Production Version
@@ -11,7 +11,7 @@
 NetDiscover is viewable and usable live here! 
 [NetDiscover Live](https://team14netdiscover.ronalddu.me/)
 
-<img src="[https://raw.githubusercontent.com/duronald/NetDiscover/main/staticNetDiscover/images/favicon.ico](https://raw.githubusercontent.com/duronald/NetDiscover/main/inspectScreenshot.png)" alt="drawing" width="500"/>
+<img src="https://raw.githubusercontent.com/duronald/NetDiscover/main/inspectScreenshot.png" alt="NetDiscover Screenshot" width="500"/>
 
 ## Creators
 
