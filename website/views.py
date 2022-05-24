@@ -489,17 +489,17 @@ def home(request):
     # devices_dict = importDeviceData(str(request.FILES['myfile']))
     
 
-    # try:
-    devices_dict = importDeviceData(json_string = request.session.get('devices_dict', ''))
+    try:
+        devices_dict = importDeviceData(json_string = request.session.get('devices_dict', ''))
     
-    if devices_dict == None:
+        if devices_dict == None:
+            request.session['devices_dict'] = str(test1dict)
+            # devices_dict = importDeviceData(json_string = request.session.get('devices_dict', ''))     
+        else:
+            pass
+    except:
         request.session['devices_dict'] = str(test1dict)
-            # devices_dict = importDeviceData(json_string = request.session.get('devices_dict', ''))
-        
-        
-    # except:
-        
-        # pass
+        pass
     
     return render(request, 'home.html')
 
