@@ -23,6 +23,7 @@ Feel free to contact any of us on LinkedIn for more infomation.
 This version of NetDiscover lacks certain functionality and the locally ran version should be ran for all functions.
 
 [NetDiscover Local Version](https://github.com/Chad-Saltzman/Network_Topology_Mapper)
+
 [NetDiscover Website](https://ronalddu.wixsite.com/netdiscover)
 
 
